@@ -1,45 +1,66 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-import logging
-import traceback
 
-logger = logging.getLogger("farmdirect.server")
-
-app = FastAPI(title="FarmDirect API", version="2.0.0")
-
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Error: {exc}\n{traceback.format_exc()}")
-    return JSONResponse(status_code=500, content={"error": True, "detail": str(exc)})
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
-def root():
-    return {"status": "FarmDirect API is Live", "version": "2.0.0"}
+HTML_PAGE = """
+<!DOCTYPE html>
+<html>
+<head>
+<title>FarmDirect - Direct from Farm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f0fdf4;margin:0;padding:0}
+header{background:#16a34a;color:white;padding:20px;text-align:center}
+.card{background:white;margin:20px;padding:20px;border-radius:12px;box-shadow:0 2px 8px #0001}
+.btn{background:#16a34a;color:white;padding:12px 20px;border:none;border-radius:8px;font-size:16px;width:100%}
+h2{color:#16a34a}
+</style>
+</head>
+<body>
+<header>
+<h1>🌾 FarmDirect</h1>
+<p>Fresh Vegetables Direct from Farm to Customer</p>
+</header>
+
+<div class="card">
+<h2>✅ Your Website is LIVE!</h2>
+<p><b>Backend:</b> farmdirect1.onrender.com</p>
+<p>Status: <span style="color:green">● Online</span></p>
+<a href="/docs"><button class="btn">View API Docs</button></a>
+</div>
+
+<div class="card">
+<h2>🛒 Markets</h2>
+<p>Hyderabad - Fresh vegetables available</p>
+<p>Price Today: Tomato ₹30/kg, Onion ₹25/kg</p>
+<button class="btn">Browse Markets</button>
+</div>
+
+<div class="card">
+<h2>📞 Contact</h2>
+<p>FarmDirect Team - Hyderabad</p>
+</div>
+</body>
+</html>
+"""
+
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return HTML_PAGE
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {"status":"ok"}
 
-try:
-    from routers import recommendations, markets, prices, voice, admin, auth, bookings
-    app.include_router(recommendations.router)
-    app.include_router(markets.router)
-    app.include_router(prices.router)
-    app.include_router(voice.router)
-    app.include_router(admin.router)
-    app.include_router(auth.router)
-    app.include_router(bookings.router)
-    print("[FarmDirect] Routers loaded")
-except Exception as e:
-    print(f"[FarmDirect] Minimal mode: {e}")
-
-print("[FarmDirect] Server started")
+@app.get("/api/status")
+def status():
+    return {"status":"FarmDirect API is Live","version":"2.0.0"}
