@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Temporary, scratch & analysis files
+scratch/
+*.log
+.gemini/
+
+# Environment secrets
+.env
+*.local
+
+# System & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Binaries & Backups
+*.exe
+*.bak
+*.zip
+Rythu_Deploy_Ready*
+
