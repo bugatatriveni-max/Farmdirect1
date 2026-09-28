@@ -20,6 +20,8 @@ app.add_middleware(
     allow_origins=["*"], allow_credentials=True,
     allow_methods=["*"], allow_headers=["*"],
 )
+app.mount("/css", StaticFiles(directory=str(_CURRENT_DIR / "css")), name="css")
+app.mount("/js", StaticFiles(directory=str(_CURRENT_DIR / "js")), name="js")
 
 # --- TRY TO LOAD YOUR REAL BACKEND, BUT DON'T CRASH IF FAILS ---
 BASE_DIR = _CURRENT_DIR
