@@ -22,26 +22,34 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
+ROUTERS_AVAILABLE = False
+
 try:
     from backend.config import HOST, PORT, BASE_DIR
     from backend.database import init_db
     from backend.routers import markets, prices, recommendations, voice, admin, auth, bookings
+    ROUTERS_AVAILABLE = True
 except ModuleNotFoundError:
     try:
         from config import HOST, PORT, BASE_DIR
         from database import init_db
         from routers import markets, prices, recommendations, voice, admin, auth, bookings
+        ROUTERS_AVAILABLE = True
     except ModuleNotFoundError:
-        # Routers folder missing on GitHub - run without routers for now
         from config import HOST, PORT, BASE_DIR
         from database import init_db
         markets = prices = recommendations = voice = admin = auth = bookings = None
+        ROUTERS_AVAILABLE = False
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 import logging
 import traceback
 
 logger = logging.getLogger("farmdirect.server")
+
+app = FastAPI(
+
 
 app = FastAPI(
     title="FarmDirect Agricultural Intelligence API",
@@ -73,13 +81,16 @@ app.add_middleware(
 )
 
 # Register REST Routers under /api
-app.include_router(recommendations.router)
-app.include_router(markets.router)
-app.include_router(prices.router)
-app.include_router(voice.router)
-app.include_router(admin.router)
-app.include_router(auth.router)
-app.include_router(bookings.router)
+if ROUTERS_AVAILABLE:
+    app.include_router(recommendations.router)
+    app.include_router(markets.router)
+    app.include_router(prices.router)
+    app.include_router(voice.router)
+    app.include_router(admin.router)
+    app.include_router(auth.router)
+    app.include_router(bookings.router)
+else:
+    print("[FarmDirect] Routers folder missing - running in minimal mode")
 
 @app.on_event("startup")
 def on_startup():
