@@ -1,131 +1,134 @@
-import sys, os
+import os
+import sys
+import logging
 from pathlib import Path
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
-import logging
 
-_CURRENT_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(_CURRENT_DIR))
-sys.path.insert(0, str(_CURRENT_DIR / "backend"))
+# Base Directory Setup
+BASE = Path(__file__).resolve().parent
+for p in [str(BASE), str(BASE / "backend")]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
-print(f"DEBUG: Running from {_CURRENT_DIR}")
-print(f"DEBUG: Files here: {os.listdir(_CURRENT_DIR)}")
+logger = logging.getLogger("farmdirect.server")
 
-app = FastAPI(title="RythuSeva - Smart Farmer", version="2.0.0")
+app = FastAPI(
+    title="RythuSeva Agricultural Intelligence Platform",
+    description="Production-grade API layer connecting Government Agricultural Datasets to FarmDirect Recommendation Engine & Multilingual Farmer UI.",
+    version="2.0.0"
+)
 
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], allow_credentials=True,
-    allow_methods=["*"], allow_headers=["*"],
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-try: app.mount("/css", StaticFiles(directory=str(_CURRENT_DIR / "css")), name="css")
-except: pass
-try: app.mount("/js", StaticFiles(directory=str(_CURRENT_DIR / "js")), name="js")
-except: pass
 
-# --- TRY TO LOAD YOUR REAL BACKEND, BUT DON'T CRASH IF FAILS ---
-BASE_DIR = _CURRENT_DIR
-HOST, PORT = "0.0.0.0", 8000
+# 1. Mount Static Frontend Assets
+if (BASE / "css").exists():
+    app.mount("/css", StaticFiles(directory=str(BASE / "css")), name="css")
+if (BASE / "js").exists():
+    app.mount("/js", StaticFiles(directory=str(BASE / "js")), name="js")
 
-try:
-    # Try to find BASE_DIR from config.py
-    import config as cfg
-    BASE_DIR = getattr(cfg, 'BASE_DIR', _CURRENT_DIR)
-    print(f"Loaded config BASE_DIR={BASE_DIR}")
-except Exception as e:
-    print(f"config.py not loaded: {e}")
-    try:
-        import backend.config as bcfg
-        BASE_DIR = getattr(bcfg, 'BASE_DIR', _CURRENT_DIR)
-        print(f"Loaded backend.config BASE_DIR={BASE_DIR}")
-    except Exception as e2:
-        print(f"backend.config not loaded: {e2}")
-
-# Try to init DB safely
-try:
-    from database import init_db
-    init_db()
-except:
+# 2. Initialize Database on Startup
+@app.on_event("startup")
+def on_startup():
     try:
         from backend.database import init_db
+        print("[FarmDirect] Initializing database and verifying tables...")
         init_db()
+        print("[FarmDirect] Database initialized successfully.")
     except Exception as e:
-        print(f"DB init skipped: {e}")
+        print(f"[FarmDirect Startup Warning] init_db skipped: {e}")
 
-# Try to load routers safely - ONE BY ONE
-def safe_include(router_path):
-    try:
-        import importlib
-        mod = importlib.import_module(router_path)
-        app.include_router(mod.router)
-        print(f"✅ Router loaded: {router_path}")
-        return True
-    except Exception as e:
-        print(f"⚠️ Router failed {router_path}: {e}")
-        return False
+# 3. Register Real Database Routers
+ROUTERS_LOADED = []
+try:
+    from backend.routers import markets, prices, recommendations, voice, admin, auth, bookings
+    app.include_router(recommendations.router)
+    app.include_router(markets.router)
+    app.include_router(prices.router)
+    app.include_router(voice.router)
+    app.include_router(admin.router)
+    app.include_router(auth.router)
+    app.include_router(bookings.router)
+    ROUTERS_LOADED = ["recommendations", "markets", "prices", "voice", "admin", "auth", "bookings"]
+    print(f"[FarmDirect] All 7 production routers loaded successfully: {ROUTERS_LOADED}")
+except Exception as e:
+    print(f"[FarmDirect Router Warning] Error loading routers: {e}")
 
-# Try both locations
-for pkg in ["routers", "backend.routers"]:
-    for name in ["markets","prices","recommendations","voice","admin","auth","bookings"]:
-        safe_include(f"{pkg}.{name}")
+# 4. WebSockets for Live Queue
+try:
+    from backend.services.socket_manager import socket_manager
+    @app.websocket("/ws/farmer/{client_id}")
+    async def websocket_farmer_endpoint(websocket: WebSocket, client_id: str):
+        await socket_manager.connect_farmer(client_id, websocket)
+        try:
+            while True:
+                data = await websocket.receive_text()
+                if data == "ping":
+                    await websocket.send_text("pong")
+        except (WebSocketDisconnect, Exception):
+            socket_manager.disconnect_farmer(client_id, websocket)
+except Exception as e:
+    print(f"[FarmDirect WebSocket Warning]: {e}")
 
+# 5. Core Health Check
 @app.get("/api/health")
 def health():
-    return {"status": "HEALTHY", "service": "RythuSeva Live", "frontend": str(BASE_DIR)}
+    return {
+        "status": "HEALTHY",
+        "service": "FarmDirect Production Backend",
+        "version": "2.0.0",
+        "routers_loaded": ROUTERS_LOADED,
+        "docs_url": "/docs"
+    }
 
-# --- FRONTEND FINDER - WILL FIND YOUR index.html ---
-def find_frontend():
-    for p in [BASE_DIR, _CURRENT_DIR, _CURRENT_DIR / "backend", Path.cwd(), _CURRENT_DIR.parent]:
-        if p and (p / "index.html").exists():
-            return p
-    # Check if index.html is in root
-    if (_CURRENT_DIR / "index.html").exists():
-        return _CURRENT_DIR
-    return _CURRENT_DIR
+# 6. Fallback Mock APIs (Only called if real routers were not loaded)
+if not ROUTERS_LOADED:
+    @app.get("/api/markets")
+    def fallback_markets():
+        return {"markets": [
+            {"id": 1, "name": "Guntur Mirchi Yard", "mandi": "Guntur", "price": 18500, "crop": "chilli", "state": "Andhra Pradesh"},
+            {"id": 2, "name": "Eluru Wari Yard", "mandi": "Eluru", "price": 2340, "crop": "paddy", "state": "Andhra Pradesh"},
+            {"id": 3, "name": "Warangal Enamamula Yard", "mandi": "Warangal", "price": 7500, "crop": "cotton", "state": "Telangana"},
+        ]}
 
-FRONTEND = find_frontend()
-print(f"Frontend dir: {FRONTEND}")
+    @app.get("/api/prices")
+    def fallback_prices():
+        return fallback_markets()
 
-# Mount css/js if they exist
-try:
-    if (FRONTEND / "css").exists():
-        app.mount("/css", StaticFiles(directory=str(FRONTEND / "css")), name="css")
-    if (FRONTEND / "js").exists():
-        app.mount("/js", StaticFiles(directory=str(FRONTEND / "js")), name="js")
-except Exception as e:
-    print(f"Static mount failed: {e}")
-
-@app.get("/bundle.js")
-def bundle_js():
-    f = FRONTEND / "bundle.js"
-    return FileResponse(str(f)) if f.exists() else JSONResponse({"error":"not found"})
-
-@app.get("/bundle.css")
-def bundle_css():
-    f = FRONTEND / "bundle.css"
-    return FileResponse(str(f)) if f.exists() else JSONResponse({"error":"not found"})
-
-@app.get("/")
-def index():
-    f = FRONTEND / "index.html"
-    if f.exists():
-        return FileResponse(str(f))
-    else:
-        # Show what files exist so we can debug
-        files = []
-        try: files = os.listdir(FRONTEND)
-        except: pass
-        return JSONResponse({
-            "status": "Backend is LIVE ✅",
-            "message": "But index.html not found. Upload your RythuSeva index.html to GitHub root",
-            "looking_in": str(FRONTEND),
-            "files_found": files
-        })
-
+# 7. Root & Single-Page Application (SPA) HTML Serving
+@app.get("/bolt")
 @app.get("/home")
 @app.get("/index.html")
-@app.get("/bolt")
-def index_alias():
-    return index()
+@app.get("/")
+def serve_index():
+    index_file = BASE / "index.html"
+    if index_file.exists():
+        return FileResponse(str(index_file))
+    return JSONResponse({"status": "Backend Live", "error": "index.html not found"})
+
+@app.get("/{full_path:path}")
+def serve_spa_routes(full_path: str):
+    if "." in full_path and not full_path.startswith("api/"):
+        target = BASE / full_path
+        if target.exists():
+            return FileResponse(str(target))
+    index_file = BASE / "index.html"
+    if index_file.exists():
+        return FileResponse(str(index_file))
+    return JSONResponse({"status": "Backend Live"})
+
+# Entry point for local execution
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 8000))
+    host = os.getenv("HOST", "0.0.0.0")
+    uvicorn.run("main:app", host=host, port=port, reload=True)
