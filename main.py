@@ -27,9 +27,15 @@ try:
     from backend.database import init_db
     from backend.routers import markets, prices, recommendations, voice, admin, auth, bookings
 except ModuleNotFoundError:
-    from config import HOST, PORT, BASE_DIR
-    from database import init_db
-    from routers import markets, prices, recommendations, voice, admin, auth, bookings
+    try:
+        from config import HOST, PORT, BASE_DIR
+        from database import init_db
+        from routers import markets, prices, recommendations, voice, admin, auth, bookings
+    except ModuleNotFoundError:
+        # Routers folder missing on GitHub - run without routers for now
+        from config import HOST, PORT, BASE_DIR
+        from database import init_db
+        markets = prices = recommendations = voice = admin = auth = bookings = None
 from fastapi import Request
 from fastapi.responses import JSONResponse
 import logging
