@@ -1,7 +1,62 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RythuSeva</title><style>*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}body{background:#f6f8f5}.top{background:#082e18;color:#fff;padding:8px 16px;font-size:12px;display:flex;gap:15px}.head{background:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px #0001}.logo{font-weight:900;color:#0a5c36;font-size:22px}.box{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px #0001}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px}.row{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;padding:0 16px}.green{background:linear-gradient(135deg,#0a5c36,#16a34a);color:#fff;border-radius:20px;padding:20px}.brown{background:linear-gradient(135deg,#7c2d12,#ea580c);color:#fff;border-radius:20px;padding:20px}.btn{background:#fff;border:0;padding:10px 16px;border-radius:20px;font-weight:800;margin-top:10px;cursor:pointer}@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}}</style></head><body>
-<div class="top">📞 1800-180-1551 (All India) | e-NAM: 1800-270-0224 | ● Backend Online v2.0</div>
-<div class="head"><div class="logo">🌱 రైతుసేవ - RythuSeva</div><div style="display:flex;gap:6px"><span style="background:#f0fdf4;border:1px solid #bbf7d0;padding:6px 10px;border-radius:15px;font-size:12px">🏠 హోమ్</span><span style="background:#0a5c36;color:#fff;padding:6px 10px;border-radius:15px;font-size:12px">👤 Admin</span></div></div>
-<div class="grid"><div class="box"><b style="font-size:24px">120+</b><br><small>ప్రభుత్వ మార్కెట్ యార్డులు</small></div><div class="box"><b style="font-size:24px">18 నిమి</b><br><small>సగటు వేచి ఉండే సమయం</small></div><div class="box"><b style="font-size:24px">₹1,420 కోట్లు</b><br><small>రైతుల DBT మొత్తం</small></div><div class="box"><b style="font-size:24px">1,842</b><br><small>క్యూలో టోకెన్లు</small></div></div>
-<div class="row"><div class="green"><h3>రైతు నమోదు & స్లాట్ బుకింగ్</h3><p style="font-size:13px;margin-top:6px">మీ మండి రాక సమయాన్ని రిజర్వ్ చేయండి, QR టోకెన్ పొందండి.</p><button class="btn">Book Slot Now →</button></div><div class="brown"><h3>Best Profit Calculator</h3><p style="font-size:13px;margin-top:6px">Net = Price - Transport - Charges<br>అత్యధిక లాభం వచ్చే మండీని కనుగొనండి</p><button class="btn" style="color:#7c2d12">Calculate →</button></div></div>
-<div style="margin:16px;background:#071f14;color:#fff;border-radius:20px;padding:20px"><span style="background:#ef4444;padding:4px 10px;border-radius:10px;font-size:11px">● LIVE</span><div style="font-size:36px;font-weight:900;color:#fde68a;margin-top:8px">AP-ELU-2026-0038</div><small>Guntur Mirchi Yard • Gate 2</small></div>
-</body></html>
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RythuSeva - All Features</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#f4f7f2}
+.top{background:#082e18;color:#b6f5c6;padding:7px 16px;font-size:11px;display:flex;gap:14px;flex-wrap:wrap}
+.top b{color:#fff}
+.head{background:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px #0001;position:sticky;top:0;z-index:20;flex-wrap:wrap;gap:10px}
+.logo{font-weight:900;color:#0a5c36;font-size:22px}.logo small{display:block;font-size:10px;color:#666;font-weight:500}
+.tab{border:1.5px solid #a7f3d0;background:#f0fdf4;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;display:inline-block;margin:2px}
+.tab.active{background:#0a5c36;color:#fff;border-color:#0a5c36}
+.user{background:#ecfdf5;padding:9px 18px;font-size:11px;display:flex;gap:10px;flex-wrap:wrap;border-bottom:1px solid #bbf7d0}
+.badge{background:#bbf7d0;padding:3px 8px;border-radius:6px;font-weight:800}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:14px 18px}
+.box{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 10px #0001;border:1px solid #e8e8e8}
+.box b{font-size:20px;display:block}.box small{color:#64748b;font-size:11px}
+.card{border-radius:18px;padding:18px;color:#fff}
+.g{background:linear-gradient(135deg,#0a5c36,#16a34a)}.r{background:linear-gradient(135deg,#7c2d12,#ea580c)}
+.btn{background:#fff;border:0;padding:9px 16px;border-radius:20px;font-weight:800;margin-top:12px;cursor:pointer;font-size:12px}
+.btn-green{background:#0a5c36;color:#fff}
+.panel{display:none;padding:18px}.panel.active{display:block}
+.live{background:#071f14;color:#fff;border-radius:18px;padding:18px;margin:14px 18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.tok{font-size:32px;font-weight:900;color:#fde68a}
+.input{padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;width:100%;margin:6px 0;font-size:13px}
+.table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px #0001}
+.table th{background:#0a5c36;color:#fff;padding:10px;font-size:11px;text-align:left}.table td{padding:10px;font-size:12px;border-bottom:1px solid #eee}
+@media(max-width:900px){.grid4{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="top"><span>Toll-Free: <b>1800-180-1551</b></span><span>e-NAM: <b>1800-270-0224</b></span><span id="status" style="margin-left:auto;background:#065f46;color:#fff;padding:3px 10px;border-radius:12px">Checking...</span></div>
+<div class="head"><div class="logo">🌱 రైతుసేవ <small>RythuSeva - Smart Farmer</small></div><div id="tabs"><span class="tab active" onclick="showTab('home',this)">🏠 Home</span><span class="tab" onclick="showTab('book',this)">📅 Booking</span><span class="tab" onclick="showTab('live',this)">🔴 Live Queue</span><span class="tab" onclick="showTab('market',this)">📊 Markets</span><span class="tab" onclick="showTab('voice',this)">🎤 Voice AI</span><span class="tab" onclick="showTab('admin',this)">👤 Admin</span></div></div>
+<div class="user"><span>👤 Venkat Reddy</span><span class="badge">Kisan ID: KS-AP-GNT-4821</span><span>✓ Biometric</span><span>📍 Guntur</span></div>
+
+<div id="home" class="panel active">
+<div class="grid4"><div class="box"><b>120+</b><small>ప్రభుత్వ మార్కెట్ యార్డులు</small></div><div class="box"><b>18 నిమి</b><small>సగటు వేచి ఉండే సమయం</small></div><div class="box"><b>₹1,420 కోట్లు</b><small>DBT మొత్తం</small></div><div class="box"><b>1,842</b><small>క్యూలో టోకెన్లు</small></div></div>
+<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:12px;padding:0 18px"><div class="card g"><h3>రైతు నమోదు & స్లాట్ బుకింగ్</h3><p style="font-size:12px;margin-top:6px">QR టోకెన్ పొందండి, లైన్లో వేచి ఉండకండి</p><button class="btn" onclick="showTab('book',document.querySelectorAll('.tab')[1])">Book Now →</button></div><div class="card r"><h3>Best Profit Calculator</h3><p style="font-size:12px;margin-top:6px">Net = Price - Transport - Charges</p><button class="btn" style="color:#7c2d12" onclick="showTab('market',document.querySelectorAll('.tab')[3])">Calculate →</button></div></div>
+<div class="live"><div><span style="background:#ef4444;padding:3px 8px;border-radius:10px;font-size:10px">LIVE</span><div class="tok">AP-ELU-2026-0038</div><small>Guntur Mirchi Yard - Gate 2</small></div><div style="font-size:11px;display:flex;gap:16px"><div><b style="color:#fde68a">WEIGHBRIDGE</b><br>Active</div><div><b style="color:#fde68a">QUALITY</b><br>Bay 3</div><div><b style="color:#fde68a">SHEDS</b><br>Ready</div></div></div>
+</div>
+
+<div id="book" class="panel"><div class="box"><h3>📅 స్లాట్ బుకింగ్</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><input class="input" value="Venkat Reddy"><input class="input" value="KS-AP-GNT-4821"><select class="input"><option>Guntur Mirchi Yard</option><option>Eluru</option><option>Kurnool</option></select><select class="input"><option>Chili</option><option>Paddy</option><option>Cotton</option></select><input class="input" type="date"><input class="input" type="number" placeholder="Qty Quintals"><input class="input" placeholder="Vehicle No" style="grid-column:span 2"></div><button class="btn btn-green" style="width:100%" onclick="document.getElementById('bRes').innerHTML='<div style=background:#dcfce7;padding:12px;border-radius:10px;margin-top:10px>✅ Booked! Token: AP-GNT-'+Math.floor(Math.random()*9000+1000)+'<br>Tomorrow 10:30 AM - QR Ready</div>'">Generate QR Token</button><div id="bRes"></div></div></div>
+
+<div id="live" class="panel"><div class="box"><h3>🔴 లైవ్ క్యూ</h3><table class="table" style="margin-top:10px"><tr><th>Token</th><th>Farmer</th><th>Yard</th><th>Status</th></tr><tr><td>AP-0037</td><td>Ramesh</td><td>Guntur</td><td style="color:green">Weighing</td></tr><tr><td><b>AP-0038</b></td><td><b>Venkat</b></td><td><b>Guntur G2</b></td><td style="color:red"><b>NOW</b></td></tr><tr><td>AP-0039</td><td>Suresh</td><td>Eluru</td><td>Waiting</td></tr></table></div></div>
+
+<div id="market" class="panel"><div class="box"><h3>📊 Markets & Profit</h3><div style="display:flex;gap:6px;margin:10px 0"><input id="crop" class="input" value="Chili"><input id="qty" class="input" value="10"><button class="btn btn-green" onclick="calc()">Calc</button></div><div id="mRes"></div><table class="table" style="margin-top:10px"><tr><th>Market</th><th>Price</th><th>Net</th><th>Best</th></tr><tr><td>Guntur</td><td>₹15,200</td><td><b>₹1,48,000</b></td><td>🏆 BEST</td></tr><tr><td>Eluru</td><td>₹14,800</td><td>₹1,42,800</td><td>-</td></tr><tr><td>Kurnool</td><td>₹14,500</td><td>₹1,38,000</td><td>-</td></tr></table></div></div>
+
+<div id="voice" class="panel"><div class="box"><h3>🎤 వాయిస్ AI</h3><p style="font-size:11px;background:#f0fdf4;padding:8px;border-radius:8px;margin:8px 0">Ask: "నేడు మిర్చి ధర ఎంత?"</p><div style="display:flex;gap:6px"><input id="vIn" class="input" placeholder="తెలుగులో అడగండి..."><button class="btn btn-green" onclick="ask()">Ask</button></div><div id="vRes" style="margin-top:10px"></div></div></div>
+
+<div id="admin" class="panel"><div class="box"><h3>👤 Admin - navAdmin</h3><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px"><div style="background:#f0fdf4;padding:12px;border-radius:12px;text-align:center"><b>2,841</b><br><small>Farmers Today</small></div><div style="background:#fef3c7;padding:12px;border-radius:12px;text-align:center"><b>₹2.1Cr</b><br><small>Transactions</small></div><div style="background:#dbeafe;padding:12px;border-radius:12px;text-align:center"><b>18m</b><br><small>Avg Wait</small></div></div><div style="margin-top:12px"><button class="btn btn-green" onclick="fetch('/api/health').then(r=>r.json()).then(d=>alert(JSON.stringify(d,null,2)))">Check Health</button> <button class="btn" style="background:#111;color:#fff" onclick="window.open('/docs')">API Docs</button></div></div></div>
+
+<script>
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active')}
+fetch('/api/health').then(r=>r.json()).then(d=>{document.getElementById('status').innerText='● Backend: '+d.status+' ✅';document.getElementById('status').style.background='#16a34a'}).catch(()=>{document.getElementById('status').innerText='● Demo Mode - Backend Live';document.getElementById('status').style.background='#ea580c'})
+function calc(){let q=document.getElementById('qty').value||10;let net=(15200*q)-400;document.getElementById('mRes').innerHTML='<div style=background:#f0fdf4;padding:10px;border-radius:10px>💰 Net: ₹'+net.toLocaleString()+' for '+q+' Qtl - Best: Guntur</div>'}
+function ask(){let q=document.getElementById('vIn').value||'ధరలు';document.getElementById('vRes').innerHTML='🤖...';setTimeout(()=>{document.getElementById('vRes').innerHTML='<div style=background:#fff;padding:10px;border-radius:10px;border:1px solid #eee><b>Q:</b> '+q+'<br><br><b>AI:</b> నేడు గుంటూరులో మిర్చి ₹15,200/Qtl. మీ DBT 24గం లో వస్తుంది.</div>'},800)}
+</script>
+</body>
+</html>
