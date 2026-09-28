@@ -41,14 +41,12 @@ except ModuleNotFoundError:
         markets = prices = recommendations = voice = admin = auth = bookings = None
         ROUTERS_AVAILABLE = False
 
-from fastapi import Request
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import logging
 import traceback
 
 logger = logging.getLogger("farmdirect.server")
-
-app = FastAPI(
 
 
 app = FastAPI(
